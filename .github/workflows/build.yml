@@ -9,23 +9,23 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
 
-    # สั่งให้ระบบ Buildozer ดึงโค้ดไปคอมพิวเตอร์คลาวด์เพื่อสร้าง APK
+    # ใช้ buildozer-action เวอร์ชันล่าสุดที่รองรับปัจจุบัน
     - name: Build with Buildozer
-      uses: kivy/buildozer-action@v0.4.0
+      uses: ArtemSBulgakov/buildozer-action@v1
       id: buildozer
       with:
         command: android debug
 
-    # อัปโหลดไฟล์ APK ที่สร้างเสร็จให้เราดาวน์โหลด
+    # อัปโหลดไฟล์ APK ด้วย upload-artifact เวอร์ชัน v4 (เวอร์ชันใหม่ล่าสุด)
     - name: Upload APK
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: thailang-apk
-        path: ${{ steps.buildozer.outputs.filename }}
+        path: bin/*.apk
