@@ -1,0 +1,31 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    # สั่งให้ระบบ Buildozer ดึงโค้ดไปคอมพิวเตอร์คลาวด์เพื่อสร้าง APK
+    - name: Build with Buildozer
+      uses: kivy/buildozer-action@v0.4.0
+      id: buildozer
+      with:
+        command: android debug
+
+    # อัปโหลดไฟล์ APK ที่สร้างเสร็จให้เราดาวน์โหลด
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: thailang-apk
+        path: ${{ steps.buildozer.outputs.filename }}
