@@ -38,6 +38,8 @@ KEYWORDS = [
     (r'สุ่มเลขจาก\((.*?)\s*ถึง\s*(.*?)\)', r'random.randint(\1, \2)'),
     (r'เข้ารหัส\s+SHA256\((.*?)\)', r'hashlib.sha256(\1.encode("utf-8")).hexdigest()'),
     (r'โหลดข้อมูลจากเว็บ\("(.*?)"\)', r'json.loads(urllib.request.urlopen("\1").read().decode("utf-8"))'),
+        (r'ถามปัญญาประดิษฐ์\((.*?)\)', r'call_gemini_ai(\1)'),
+
 ]
 
 def translate_to_python(thai_code):
