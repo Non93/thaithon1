@@ -9,9 +9,10 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-    - name: Get Rodent / Buildozer prepare
+    - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.10'
@@ -22,15 +23,23 @@ jobs:
         distribution: 'zulu'
         java-version: '17'
 
-    - name: Build with Buildozer Action
-      uses: ArtemSBulgakov/buildozer-action@v1
-      id: buildozer
-      with:
-        command: android debug
+    - name: Install Dependencies
+      run: |
+        sudo dpkg --add-architecture i386
+        sudo apt-get update
+        sudo apt-get install -y build-essential git python3-dev zlib1g-dev libffi-dev libssl-dev autoconf libtool pkg-config unzip zip openjdk-17-jdk python3-pip libncurses5:i386 libstdc++6:i386 libz1:i386
 
-    - name: Upload APK
+    - name: Install Buildozer and Cython
+      run: |
+        pip install --upgrade pip
+        pip install --upgrade buildozer cython==0.29.33
+
+    - name: Build with Buildozer
+      run: |
+        buildozer -v android debug
+
+    - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: thailang-apk
         path: bin/*.apk
-concurrency: 
